@@ -1,0 +1,93 @@
+[1mdiff --git a/routes/web.php b/routes/web.php[m
+[1mindex c45195a..c713c7c 100644[m
+[1m--- a/routes/web.php[m
+[1m+++ b/routes/web.php[m
+[36m@@ -86,7 +86,7 @@[m
+ // Route::get('/notify', [NotificationController::class, 'send']);[m
+ [m
+ [m
+[31m-Route::any('/welcome',function(){[m
+[32m+[m[32mRoute::any('/welcomes',function(){[m
+   return view('welcomes');[m
+ });[m
+ [m
+[1mdiff --git a/storage/logs/laravel.log b/storage/logs/laravel.log[m
+[1mindex bd439ba..27d8ac5 100644[m
+[1m--- a/storage/logs/laravel.log[m
+[1m+++ b/storage/logs/laravel.log[m
+[36m@@ -5857,3 +5857,181 @@[m
+ [2025-12-30 13:53:44] local.INFO: array ([m
+   'messageseen' => '1',[m
+ )  [m
+[32m+[m[32m[2025-12-31 09:46:34] local.ERROR: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select * from `sessions` where `id` = zUW54Qwhlxgduk4CYG7RtFFiBxkXcRVPIL52gOOT limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select * from `sessions` where `id` = zUW54Qwhlxgduk4CYG7RtFFiBxkXcRVPIL52gOOT limit 1) at C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:824)[m
+[32m+[m[32m[stacktrace][m
+[32m+[m[32m#0 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(978): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))[m
+[32m+[m[32m#1 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(957): Illuminate\\Database\\Connection->tryAgainIfCausedByLostConnection(Object(Illuminate\\Database\\QueryException), 'select * from `...', Array, Object(Closure))[m
+[32m+[m[32m#2 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(780): Illuminate\\Database\\Connection->handleQueryException(Object(Illuminate\\Database\\QueryException), 'select * from `...', Array, Object(Closure))[m
+[32m+[m[32m#3 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(397): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))[m
+[32m+[m[32m#4 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3188): Illuminate\\Database\\Connection->select('select * from `...', Array, false)[m
+[32m+[m[32m#5 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3173): Illuminate\\Database\\Query\\Builder->runSelect()[m
+[32m+[m[32m#6 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3763): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()[m
+[32m+[m[32m#7 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3172): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))[m
+[32m+[m[32m#8 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(366): Illuminate\\Database\\Query\\Builder->get(Array)[m
+[32m+[m[32m#9 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3095): Illuminate\\Database\\Query\\Builder->first(Array)[m
+[32m+[m[32m#10 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\DatabaseSessionHandler.php(96): Illuminate\\Database\\Query\\Builder->find('zUW54Qwhlxgduk4...')[m
+[32m+[m[32m#11 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Store.php(117): Illuminate\\Session\\DatabaseSessionHandler->read('zUW54Qwhlxgduk4...')[m
+[32m+[m[32m#12 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Store.php(105): Illuminate\\Session\\Store->readFromHandler()[m
+[32m+[m[32m#13 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Store.php(89): Illuminate\\Session\\Store->loadSession()[m
+[32m+[m[32m#14 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(146): Illuminate\\Session\\Store->start()[m
+[32m+[m[32m#15 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(390): Illuminate\\Session\\Middleware\\StartSession->Illuminate\\Session\\Middleware\\{closure}(Object(Illuminate\\Session\\Store))[m
+[32m+[m[32m#16 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(143): tap(Object(Illuminate\\Session\\Store), Object(Closure))[m
+[32m+[m[32m#17 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(115): Illuminate\\Session\\Middleware\\StartSession->startSession(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store))[m
+[32m+[m[32m#18 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(63): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))[m
+[32m+[m[32m#19 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#20 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#21 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#22 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(74): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#23 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#24 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(137): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#25 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(821): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))[m
+[32m+[m[32m#26 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(800): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#27 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(764): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))[m
+[32m+[m[32m#28 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(753): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#29 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#30 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(180): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#31 C:\\xampp\\htdocs\\school\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#32 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#33 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#34 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#35 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#36 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#37 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#38 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#39 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#40 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#41 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(109): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#42 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#43 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#44 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#45 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#46 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#47 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#48 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#49 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePathEncoding.php(26): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#50 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(219): Illuminate\\Http\\Middleware\\ValidatePathEncoding->handle(Object(Illuminate\\Http\\Request), Object(Closure))[m
+[32m+[m[32m#51 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(137): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#52 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))[m
+[32m+[m[32m#53 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#54 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1220): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#55 C:\\xampp\\htdocs\\school\\public\\index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))[m
+[32m+[m[32m#56 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\xampp\\\\htdocs...')[m
+[32m+[m[32m#57 {main}[m
+[32m+[m
+[32m+[m[32m[previous exception] [object] (PDOException(code: 2002): SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it at C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:66)[m
+[32m+[m[32m[stacktrace][m
+[32m+[m[32m#0 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(66): PDO->__construct('mysql:host=127....', 'root', Object(SensitiveParameterValue), Array)[m
+[32m+[m[32m#1 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(85): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'root', Object(SensitiveParameterValue), Array)[m
+[32m+[m[32m#2 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(48): Illuminate\\Database\\Connectors\\Connector->tryAgainIfCausedByLostConnection(Object(PDOException), 'mysql:host=127....', 'root', Object(SensitiveParameterValue), Array)[m
+[32m+[m[32m#3 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)[m
+[32m+[m[32m#4 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)[m
+[32m+[m[32m#5 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()[m
+[32m+[m[32m#6 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1234): call_user_func(Object(Closure))[m
+[32m+[m[32m#7 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(511): Illuminate\\Database\\Connection->getPdo()[m
+[32m+[m[32m#8 C:\\xampp\\htdocs\\school\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(406): Illuminate\\Database\\Connection->getP

@@ -86,7 +86,7 @@ Route::any('/profile',[PracticeController::class,'profile'])->name('profile');
 // Route::get('/notify', [NotificationController::class, 'send']);
 
 
-Route::any('/welcome',function(){
+Route::any('/welcomes',function(){
   return view('welcomes');
 });
 
