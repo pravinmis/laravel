@@ -14,27 +14,25 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 // app/Events/MessageSent.php
-class MessageSent implements ShouldBroadcastNow
-{
+class MessageSent implements ShouldBroadcastNow {
     use Dispatchable, SerializesModels;
 
     public $message;
+    public $groupId;
 
-    public function __construct(Message $message)
-    {
+    public function __construct(Message $message) {
         $this->message = $message->load('user');
-      //  dd($this->message);
+        $this->groupId = $message->group_id;
+        //dd($this->message,$this->groupId);
     }
 
-    public function broadcastOn()
-    {
-        \Log::info(['messagesend'=>$this->message->to_id]);
-
-        return new PrivateChannel('chat.' . $this->message->to_id);
+    public function broadcastOn() {
+       // dd($this->groupId);
+        return new PresenceChannel('group.'.$this->groupId);
     }
 
-    public function broadcastAs()
-    {
-        return 'message.sent';
+    public function broadcastAs() {
+        return 'group.message';
     }
 }
+

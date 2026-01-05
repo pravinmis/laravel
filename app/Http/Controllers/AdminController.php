@@ -3,33 +3,63 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\User;
+use App\Models\User;
+use App\Models\Admin;
 
 class AdminController extends Controller
 {
      public function create(){
 
-        User::create([
-            'name'=>'uhu',
-            'email'=>'u@gmail.com',
-             'password'=>'pravin'
-
-        ]);
+        return view('admin.create');
      }
      
-     public function index(){
+
+      public function store(Request $request){
+
+          $valide = $request->validate([
+            'name'=>'required|string',
+            'email'=>'required|email|unique:users,email',
+            'password'=>'required|min:6'
+          ]);
+          $data = [
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'password'=>\Hash::make($request->password)
+          ];
+
+          $user = User::create($data);
+        //  $user->assignRole('admin');
+          if($user){
+            return back()->with(['success'=>'create successfully']);
+          }else{
+             return back()->with(['fail'=>'create failed']);
+          }
+
+      }
 
 
-      $user = User::find(1);
-      
-      if ($user->hasRole('admin')) {
-    echo "Admin hai!";
-}
+    public function login(){
+        return view('admin.login');
+    }
 
-if ($user->can('edit post')) {
-    echo "User edit kar sakta hai!";
-}
+  public function loginstore(Request $request){
 
-        return "hello";
+     $credential =   $request->only('email','password');
+
+     if(\Auth::guard('admin')->attempt($credential)){
+
+        return back()->with(['success'=>'login successfully']);
+
+     }else{
+        return back()->with(['fail'=>'invalide credential']);
      }
+    }
+
+    public function dashboard(){
+
+     $user = User::get();
+     $user->hasRole('user');
+
+      return view('dashboard',with(['user'=>$user]));
+    }
 }

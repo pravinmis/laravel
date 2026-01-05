@@ -11,19 +11,20 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         // create permissions
-        Permission::firstOrCreate(['name' => 'create articles']);
-        Permission::firstOrCreate(['name' => 'edit articles']);
-        Permission::firstOrCreate(['name' => 'delete articles']);
+     $dashboard =    Permission::firstOrCreate(['name' => 'dashboard']);
+      $postView =    Permission::firstOrCreate(['name' => 'post.view']);
+      $postCreate =   Permission::firstOrCreate(['name' => 'post.create']);
+
         // Permission::firstOrCreate(['name' => 'update articles']);
 
         // // create roles and assign permissions
-        // $writer = Role::firstOrCreate(['name' => 'writer']);
-        // $writer->givePermissionTo(['create articles','edit articles']);
+        $user = Role::firstOrCreate(['name' => 'user']);
+        $user->givePermissionTo(['dashboard']);
 
-        // $media = Role::firstOrCreate(['name' => 'media']);
-        // $media->givePermissionTo(['update articles']);
+         $seller = Role::firstOrCreate(['name' => 'seller']);
+         $seller->givePermissionTo(['dashboard','post.view']);
 
-        $admin = Role::firstOrCreate(['name' => 'admin']);
+         $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->givePermissionTo(Permission::all());
     }
 }

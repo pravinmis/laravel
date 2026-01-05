@@ -441,6 +441,16 @@ if ($user) {
         \Log::info(auth('seller')->id());
 
        // dd(auth()->id());
+       if ($user->hasRole('admin')) {
+        return redirect('/admin/dashboard');
+    }
+
+    if ($user->hasRole('seller')) {
+        return redirect('/seller/dashboard');
+    }
+
+    return redirect('/dashboard'); // normal user
+    
         return response()->json('successfully');
        
         // password wrong
@@ -529,6 +539,11 @@ public function role(Request $request){
 }
 
 
+  public function dashboard(){
 
+      $user = User::role('user')->where('id','!=',auth()->id())->get(); // sirf user role wale
+    // $user->hasRole('user');
 
+      return view('dashboard',with(['user'=>$user]));
+    }
 }

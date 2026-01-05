@@ -7,10 +7,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Authenticatable
 {
-     use HasApiTokens,  HasFactory, Notifiable, HasRoles;
+     use HasApiTokens,  HasFactory, Notifiable, HasRoles,SoftDeletes;
 
        protected $table = "employees";        
    //    protected $guard_name = 'seller'; // optional but useful

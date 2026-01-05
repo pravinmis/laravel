@@ -36,13 +36,13 @@ public function store(Request $request)
     {
        //dd('hello');
 
-        $message = Message::create([
-            'from_id' => auth()->id(),
-            'to_id'   => $request->to_id,
-            'message' => $request->message
+         $msg = Message::create([
+            'group_id'=>$request->group_id,
+            'user_id'=>auth()->id(),
+            'message'=>$request->message
         ]);
           // dd($message);
-        broadcast(new MessageSent($message))->toOthers();
+        broadcast(new MessageSent($msg))->toOthers();
 
         return response()->json($message);
     }
@@ -72,35 +72,35 @@ public function store(Request $request)
     }
 
     public function typing(Request $request)
-    {
-        broadcast(new UserTyping(auth()->id(), $request->to_id))->toOthers();
+    { //dd(auth()->id());
+        broadcast(new UserTyping(auth()->id(), $request->group_id))->toOthers();
     }
 
 
     
-    public function chat($userId)
+    public function chat()
     {
-        $me = auth()->id();
+        // $me = auth()->id();
 
-        // Safety
-        abort_if($me == $userId, 403);
+        // // Safety
+        // abort_if($me == $userId, 403);
 
-        // Opposite user
-        $user = User::findOrFail($userId);
+        // // Opposite user
+        // $user = User::findOrFail($userId);
 
-        // 🔥 Messages between A & B
-        $messages = Message::where(function ($q) use ($me, $userId) {
-                $q->where('from_id', $me)
-                  ->where('to_id', $userId);
-            })
-            ->orWhere(function ($q) use ($me, $userId) {
-                $q->where('from_id', $userId)
-                  ->where('to_id', $me);
-            })
-            ->orderBy('id')
-            ->get();
+        // // 🔥 Messages between A & B
+        // $messages = Message::where(function ($q) use ($me, $userId) {
+        //         $q->where('from_id', $me)
+        //           ->where('to_id', $userId);
+        //     })
+        //     ->orWhere(function ($q) use ($me, $userId) {
+        //         $q->where('from_id', $userId)
+        //           ->where('to_id', $me);
+        //     })
+        //     ->orderBy('id')
+        //     ->get();
 
-        return view('chat', compact('user', 'messages'));
+        return view('chat');
     }
 
 }

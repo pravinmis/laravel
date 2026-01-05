@@ -42,7 +42,7 @@ return [
         ],
 
         'admin'=>[
-            'diver'=>'session',
+            'driver'=>'session',
             'provider'=>'admins'
         ],
         'seller'=>[

@@ -12,29 +12,26 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 // app/Events/UserTyping.php
-class UserTyping implements ShouldBroadcastNow
-{
-    use Dispatchable, SerializesModels;
+class UserTyping implements ShouldBroadcastNow {
+use Dispatchable, SerializesModels;
 
-    public $fromId;
-    public $toId;
+    public $user;
+    public $groupId;
 
-    public function __construct($fromId,$toId) 
-    {
-       $this->toId = $toId;
-      // dd($this->toId);
+    public function __construct($user, $groupId) {
+       // dd($user, $groupId);
+        $this->user = $user;
+        $this->groupId = $groupId;
     }
 
-    public function broadcastOn()
-    {
-        \Log::info(['name'=>$this->toId]);
-        return new PrivateChannel('chat.' . $this->toId);
+    public function broadcastOn() {
+      //dd($this->user);
+        \Log::info(['group_id'=>$this->groupId]);
+
+        return new PresenceChannel('group.'.$this->groupId);
     }
 
-    public function broadcastAs()
-    {
-        return 'user.typing';
+    public function broadcastAs() {
+        return 'typing';
     }
 }
-
-

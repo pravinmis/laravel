@@ -5,103 +5,61 @@ console.log('app.js loaded');
 const userId = document.querySelector('meta[name="user-id"]').content;
 const csrf   = document.querySelector('meta[name="csrf-token"]').content;
 
-// 👉 URL se aata hai
-// /chat/{toId}
-const toId = window.location.pathname.split('/').pop();
+let groupId = null;
+let channel = null;
 
-// ===== ECHO LISTENER =====
-window.Echo.private(`chat.${userId}`)
+window.openGroup = function(id){
+    if(channel) Echo.leave(`group.${groupId}`);
 
-.listen('.message.sent', e => {
-    console.log('Message received', e.message);
+    groupId = id;
 
-    addMessage(e.message, false);
+    channel = Echo.join(`group.${groupId}`)
 
-    // 👉 Delivered
-    fetch(`/chat/delivered/${e.message.id}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrf
-        }
-    });
-})
+        .here(users => console.log('Online:',users))
 
-.listen('.message.delivered', e => {
-    const tick = document.getElementById(`tick-${e.messageId}`);
-    if (tick) tick.innerText = '✔✔';
-})
+        .joining(user => console.log(user.name,'joined'))
 
-.listen('.message.seen', () => {
-    document.querySelectorAll('.tick').forEach(t => {
-        t.innerText = '✔✔ Seen';
-    });
-})
+        .leaving(user => console.log(user.name,'left'))
 
-.listen('.user.typing', () => {
-    const typingDiv = document.getElementById('typing');
-    typingDiv.innerText = 'Typing...';
+        .listen('.group.message', e => {
+            addMessage(e.message);
+        })
 
-    clearTimeout(window.typingTimer);
-    window.typingTimer = setTimeout(() => {
-        typingDiv.innerText = '';
-    }, 1000);
-});
+        .listen('.typing', e => {
+            document.getElementById('typing').innerText =
+                `${e.user.name} is typing...`;
+            setTimeout(()=>typing.innerText='',1000);
+        });
+}
 
-// ===== PAGE LOAD → SEEN =====
-window.onload = function () {
-    fetch(`/chat/seen/${toId}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrf
-        }
-    });
-};
-
-// ===== SEND MESSAGE =====
-window.sendMessage = function () {
-    const input = document.getElementById('message');
-
-    if (!input.value.trim()) return;
-
-    fetch('/chat/send', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrf
+window.sendMessage = function(){
+    fetch('/chat/send',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+            'X-CSRF-TOKEN':csrf
         },
-        body: JSON.stringify({
-            to_id: toId,
-            message: input.value
+        body:JSON.stringify({
+            group_id:groupId,
+            message:message.value
         })
     });
+    message.value='';
+}
 
-    // Sender side message
-    addMessage({ message: input.value, id: Date.now() }, true);
-    input.value = '';
-};
-
-// ===== TYPING =====
-window.typing = function () {
-    fetch('/chat/typing', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrf
+window.typing = function(){
+    fetch('/chat/typing',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+            'X-CSRF-TOKEN':csrf
         },
-        body: JSON.stringify({ to_id: toId })
+        body:JSON.stringify({group_id:groupId})
     });
-};
+}
 
-// ===== UI =====
-function addMessage(msg, isSender) {
+function addMessage(msg){
     const div = document.createElement('div');
-    div.style.margin = '5px';
-    div.style.textAlign = isSender ? 'right' : 'left';
-
-    div.innerHTML = `
-        ${msg.message}
-        ${isSender ? `<span class="tick" id="tick-${msg.id}">✔</span>` : ''}
-    `;
-
+    div.innerHTML = `<b>${msg.user.name}:</b> ${msg.message}`;
     document.getElementById('chat-box').appendChild(div);
 }

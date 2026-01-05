@@ -14,7 +14,9 @@ use App\models\Seller;
 use App\models\Order;
 use Illuminate\Support\Facades\DB;
 use App\models\Order_item;
+use App\Events\AdminNotification;
 use Laravel\Passport\PersonalAccessTokenResult;
+use App\Notifications\UserRegisteredNotification;
 
 
 class TestController extends Controller
@@ -109,12 +111,16 @@ public function store(Request $request)
             $file->move(public_path('uploads'), $filename);
         }
 
-        User::create([
+     $user =   User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => bcrypt($request->password),
-            'image'    => $filename
+          //  'image'    => $filename
         ]);
+
+        
+     $admin = User::where('role', 'admin')->first();
+$admin->notify(new UserRegisteredNotification($user));
 
         return back()->with('success', 'User created successfully');
 

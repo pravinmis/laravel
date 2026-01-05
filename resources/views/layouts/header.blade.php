@@ -1,29 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>@yield('title')</title>
-  <meta charset="utf-8">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="{{ asset('js/java.js') }}"></script>
-  <style>
+<meta name="user-id" content="{{ auth()->id() }}">
 
-table tr th{
-  border : 2px solid red;
-}
-tr td{
-  border : 2px solid red;
-}
- td{
-  border : 2px solid red;
-}
-    </style>
-</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
 
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
 
+                <a class="nav-link dropdown-toggle position-relative"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false"
+                   id="notification-bell">
+                 
+                    🔔
+                   
+                    <span id="notify-count"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      @auth   {{ auth()->user()->unreadNotifications->count() }}   @endauth
+                    </span>
+                </a>
 
+                <ul class="dropdown-menu dropdown-menu-end"
+                    id="notify-list"
+                    style="width:300px">
+            @auth
+                    @foreach(auth()->user()->unreadNotifications as $notification)
+                        <li class="dropdown-item d-flex justify-content-between align-items-center"
+                            data-id="{{ $notification->id }}">
 
+                            {{ $notification->data['message'] }}
 
+                            <button class="btn btn-sm btn-link text-success mark-read">
+                                ✓
+                            </button>
+                        </li>
+                    @endforeach
+                    @endauth
+                </ul>
+              
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+<!-- 🔊 Sound -->
+<audio id="notify-sound" preload="auto">
+    <source src="{{ asset('sounds/notification.mp3') }}" type="audio/mpeg">
+</audio>

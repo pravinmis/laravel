@@ -15,16 +15,16 @@ class SellerSeeder extends Seeder
      */
     public function run(): void
     {
-        //  Permission::create(['name'=>'create sellers','guard_name'=>'seller']);
-        //  permission::create(['name'=>'edit sellers','guard_name'=>'seller']);
+        //  Permission::create(['name'=>'create seller','guard_name'=>'seller']);
+        //  permission::create(['name'=>'edit seller','guard_name'=>'seller']);
+        //  permission::create(['name'=>'delete seller','guard_name'=>'seller']);
 
-
-        $role = Role::create(['name'=>'seller','guard_name'=>'seller']);
-        $role->givePermissionTo(['create sellers','edit sellers']);
+        // $role = Role::create(['name'=>'seller','guard_name'=>'seller']);
+        // $role->givePermissionTo(['create seller','edit seller','delete seller']);
 
         $seller = Seller::find(1);
         $seller->assignRole('seller');
-        $seller->givePermissionTo(['create sellers']);
+      //  $seller->givePermissionTo(['create sellers']);
 
     }
 }

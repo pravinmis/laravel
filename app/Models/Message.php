@@ -10,16 +10,11 @@ class Message extends Model
 
 
 
-  protected $fillable = [
-        'from_id','to_id','message',
-        'delivered_at','seen_at'
-    ];
+  protected $fillable = ['group_id','user_id','message'];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class,'from_id');
+    public function user() {
+        return $this->belongsTo(User::class);
     }
-   
 }
 
 

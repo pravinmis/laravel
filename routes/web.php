@@ -9,6 +9,30 @@ use App\Http\Controllers\PracticeController;
 Use App\Http\Controllers\RazorpayController;
 Use App\Http\Controllers\AdminController;
 Use App\Http\Controllers\NotificationController;
+Use App\Http\Controllers\EmployeeController;
+
+
+
+
+Route::any('/login',[HomeController::class,'login']);
+Route::any('/loginstore',[HomeController::class,'loginstore']);
+
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard',[HomeController::class,'dashboard'])->middleware('permission:dashboard');
+
+    Route::get('/posts', function () {
+        return view('posts.index');
+    })->middleware('permission:post.view');
+
+    Route::get('/posts/create', function () {
+        return view('posts.create');
+    })->middleware('permission:post.create');
+
+});
+
+Route::any('/cache',[EmployeeController::class,'cache']);
 
 Route::get('/', function () {
     return view('home');
@@ -53,15 +77,15 @@ Route::get('/checkout/return', [\App\Http\Controllers\CashfreeController::class,
 
 
 
-Route::get('/admin', function () {
+// Route::get('/admin', function () {
   
-   return view('admin.index');
-})->middleware(['auth:seller','role:seller']);
+//    return view('admin.index');
+// })->middleware(['auth:seller','role:seller']);
 
 
-Route::get('/admins', function () {
-   return view('admin.index');
-})->middleware(['auth:seller','permission:create sellers']);
+// Route::get('/admins', function () {
+//    return view('admin.index');
+// })->middleware(['auth:seller','permission:create sellers']);
 
 
 Route::any('/role',[HomeController::class,'role']);
@@ -101,9 +125,9 @@ Route::any('/welcomes',function(){
 //   return view('chat');
 // });
 // routes/web.php
-Route::get('/chat/{user}', [NotificationController::class, 'chat']);
-Route::post('/chat/send', [NotificationController::class,'send']);
+Route::any('/chat', [NotificationController::class, 'chat']);
+Route::any('/chat/send', [NotificationController::class,'send']);
 Route::any('/chat/delivered/{id}', [NotificationController::class,'delivered']);
 Route::any('/chat/seen/{user}', [NotificationController::class,'seen']);
-Route::post('/chat/typing', [NotificationController::class,'typing']);
+Route::any('/chat/typing', [NotificationController::class,'typing']);
 
