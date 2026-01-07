@@ -10,6 +10,8 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use App\Models\User;
+
 
 // app/Events/UserTyping.php
 class UserTyping implements ShouldBroadcastNow {
@@ -19,8 +21,9 @@ use Dispatchable, SerializesModels;
     public $groupId;
 
     public function __construct($user, $groupId) {
-       // dd($user, $groupId);
-        $this->user = $user;
+    // dd($user, $groupId);
+           $users = User::find($user);
+        $this->user = $users;
         $this->groupId = $groupId;
     }
 

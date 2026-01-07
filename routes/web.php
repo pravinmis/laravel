@@ -10,7 +10,7 @@ Use App\Http\Controllers\RazorpayController;
 Use App\Http\Controllers\AdminController;
 Use App\Http\Controllers\NotificationController;
 Use App\Http\Controllers\EmployeeController;
-
+use Illuminate\Http\Request;
 
 
 
@@ -34,9 +34,14 @@ Route::middleware(['auth'])->group(function () {
 
 Route::any('/cache',[EmployeeController::class,'cache']);
 
-Route::get('/', function () {
-    return view('home');
+Route::get('/', function (Request $request) {
+
+    $path = $request->path();
+   // dd($path);
+    
+    return view('home',compact('path'));
 });
+
 Route::get('home', function (){
     return view('home');
 });
@@ -127,7 +132,10 @@ Route::any('/welcomes',function(){
 // routes/web.php
 Route::any('/chat', [NotificationController::class, 'chat']);
 Route::any('/chat/send', [NotificationController::class,'send']);
-Route::any('/chat/delivered/{id}', [NotificationController::class,'delivered']);
-Route::any('/chat/seen/{user}', [NotificationController::class,'seen']);
+Route::any('/chat/delivered', [NotificationController::class,'delivered']);
+Route::any('/chat/seen', [NotificationController::class,'seen']);
 Route::any('/chat/typing', [NotificationController::class,'typing']);
 
+Route::post('/broadcasting/auth', function () {
+    return auth()->check();
+});

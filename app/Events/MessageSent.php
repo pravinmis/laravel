@@ -21,9 +21,10 @@ class MessageSent implements ShouldBroadcastNow {
     public $groupId;
 
     public function __construct(Message $message) {
+      //  dd($message->load('user'));
         $this->message = $message->load('user');
         $this->groupId = $message->group_id;
-        //dd($this->message,$this->groupId);
+       // dd($this->message,$this->groupId);
     }
 
     public function broadcastOn() {

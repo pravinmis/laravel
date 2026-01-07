@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Broadcast;
 // });
 
 Broadcast::channel('group.{groupId}', function ($user, $groupId) {
+
+    \Log::info(['group_id'=>$groupId,'user_id'=>$user->id]);
     return \DB::table('group_user')
         ->where('group_id',$groupId)
         ->where('user_id',$user->id)

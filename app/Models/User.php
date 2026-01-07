@@ -28,7 +28,7 @@ class User extends Authenticatable
         'image'
     ];
 
-     protected $appends = ['image_url','profile']; // important
+     protected $appends = ['image_url']; // important
      
 
 
@@ -50,10 +50,10 @@ class User extends Authenticatable
     }
 
 
-    public function getProfileAttribute()
-    {
-        return route('updates', $this->id);
-    }
+    // public function getProfileAttribute()
+    // {
+    //     return route('updates', $this->id);
+    // }
 
     /**
      * The attributes that should be hidden for serialization.
