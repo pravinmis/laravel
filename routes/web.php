@@ -136,6 +136,18 @@ Route::any('/chat/delivered', [NotificationController::class,'delivered']);
 Route::any('/chat/seen', [NotificationController::class,'seen']);
 Route::any('/chat/typing', [NotificationController::class,'typing']);
 
+
+Route::post('/notification-read/{id}', function($id){
+    auth()->user()->notifications()->where('id',$id)->first()->markAsRead();
+    return response()->json(['success' => true]);
+});
+
+
 Route::post('/broadcasting/auth', function () {
     return auth()->check();
 });
+
+// Route::get('/test-noti', function () {
+//     auth()->user()->notify(new \App\Notifications\NewUserRegistered(auth()->user()));
+//     return "sent";
+// });

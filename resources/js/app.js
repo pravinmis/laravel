@@ -1,9 +1,13 @@
 import './bootstrap';
-console.log('app.js loaded');
+import { initNotifications } from './notification';
 
-// ===== META =====
 const userId = document.querySelector('meta[name="user-id"]').content;
+console.log(userId);
+initNotifications(userId);
+
 const csrf   = document.querySelector('meta[name="csrf-token"]').content;
+ 
+   
 
 // ===== STATE =====
 let groupId = null;
@@ -100,6 +104,7 @@ setTimeout(() => {
 }, 300);
 
 };
+
 
 
 

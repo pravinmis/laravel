@@ -5,8 +5,9 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast; // 👈 ADD THIS
 
-class UserRegisteredNotification extends Notification
+class UserRegisteredNotification extends Notification implements ShouldBroadcast // 👈 ADD THIS
 {
     use Queueable;
 
@@ -17,7 +18,6 @@ class UserRegisteredNotification extends Notification
         $this->user = $user;
     }
 
-    // 🔥 Database + Broadcast
     public function via($notifiable)
     {
         return ['database', 'broadcast'];
@@ -33,6 +33,8 @@ class UserRegisteredNotification extends Notification
 
     public function toBroadcast($notifiable)
     {
+        \Log::info(['broadcasting_user_id' => $this->user->id]);
+
         return new BroadcastMessage([
             'message' => $this->user->name . ' has registered',
             'user_id' => $this->user->id,

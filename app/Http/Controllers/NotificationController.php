@@ -103,7 +103,7 @@ public function store(Request $request)
 
 
     public function typing(Request $request)
-    { //dd(auth()->id());
+    { ////dd(auth()->id());
         broadcast(new UserTyping(auth()->id(), $request->group_id))->toOthers();
     }
 
@@ -132,6 +132,26 @@ public function store(Request $request)
         //     ->get();
          $groups = Group::all();
         return view('chat',with(['groups'=>$groups]));
+    }
+
+
+
+    public function markRead(Request $request)
+    {
+        $id = $request->notification_id;
+       //  dd($id);
+        $notification = auth()->user()
+            ->unreadNotifications()
+            ->where('id', $id)
+            ->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return response()->json([
+            'status' => 'ok'
+        ]);
     }
 
 }

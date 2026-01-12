@@ -1,23 +1,35 @@
-export function initNotifications() {
-    const meta = document.querySelector('meta[name="user-id"]');
-    if (!meta) return;
+export function initNotifications(userId) {
+    const notiList = document.getElementById('notification-list');
+    const notiCount = document.getElementById('noti-count');
 
-    const userId = meta.getAttribute('content');
-
-    Echo.private(`App.Models.User.${userId}`)
+    window.Echo.private(`App.Models.User.${userId}`)
         .notification((notification) => {
-            console.log('New notification:', notification);
-
-            let count = document.getElementById('notify-count');
-            if (count) {
-                count.innerText = parseInt(count.innerText) + 1;
-            }
-
-            let list = document.getElementById('notify-list');
-            if (list) {
-                list.innerHTML =
-                    `<li class="dropdown-item">${notification.message}</li>` +
-                    list.innerHTML;
-            }
+          //  alert('jhjhjhjh');
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <a href="#" class="dropdown-item mark-read" data-id="">
+                    ${notification.message}
+                </a>
+            `;
+            notiList.prepend(li);
+            notiCount.innerText = parseInt(notiCount.innerText) + 1;
         });
+
+    // Mark as read
+    document.addEventListener('click', function(e){
+        if(e.target.classList.contains('mark-read')){
+            e.preventDefault();
+            const id = e.target.dataset.id;
+
+            fetch(`/notification-read/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            });
+
+            e.target.parentElement.remove();
+            notiCount.innerText = Math.max(0, parseInt(notiCount.innerText) - 1);
+        }
+    });
 }

@@ -4,42 +4,26 @@
     <div class="container-fluid">
 
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown">
+            @role('admin')
+           <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle position-relative" href="#" data-bs-toggle="dropdown">
+        🔔
+        <span id="noti-count" class="badge bg-danger">
+            {{ auth()->user()->unreadNotifications->count() }}
+        </span>
+    </a>
 
-                <a class="nav-link dropdown-toggle position-relative"
-                   href="#"
-                   role="button"
-                   data-bs-toggle="dropdown"
-                   aria-expanded="false"
-                   id="notification-bell">
-                 
-                    🔔
-                   
-                    <span id="notify-count"
-                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                      @auth   {{ auth()->user()->unreadNotifications->count() }}   @endauth
-                    </span>
+    <ul class="dropdown-menu dropdown-menu-end" id="notification-list">
+        @foreach(auth()->user()->unreadNotifications as $n)
+            <li>
+                <a href="#" class="dropdown-item mark-read" data-id="{{ $n->id }}">
+                    {{ $n->data['message'] }}
                 </a>
-
-                <ul class="dropdown-menu dropdown-menu-end"
-                    id="notify-list"
-                    style="width:300px">
-            @auth
-                    @foreach(auth()->user()->unreadNotifications as $notification)
-                        <li class="dropdown-item d-flex justify-content-between align-items-center"
-                            data-id="{{ $notification->id }}">
-
-                            {{ $notification->data['message'] }}
-
-                            <button class="btn btn-sm btn-link text-success mark-read">
-                                ✓
-                            </button>
-                        </li>
-                    @endforeach
-                    @endauth
-                </ul>
-              
             </li>
+        @endforeach
+    </ul>
+</li>
+@endrole
         </ul>
 
     </div>
