@@ -55,18 +55,23 @@
                 <div class="collapse {{ request()->is('categories*') ? 'show' : '' }}"
                      id="categoryMenu">
                     <ul class="nav flex-column ms-3">
+                @can('category.list')
                         <li class="nav-item">
                             <a class="nav-link"
                                href="">
                                 Category List
                             </a>
                         </li>
+                        @endcan
+
+                        @can('category.create')
                         <li class="nav-item">
                             <a class="nav-link"
                                href="">
                                 Create Category
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </div>
             </li>

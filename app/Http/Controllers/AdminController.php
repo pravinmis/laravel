@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Admin;
+use App\Notifications\UserRegisteredNotification;
 
 class AdminController extends Controller
 {
@@ -15,6 +16,7 @@ class AdminController extends Controller
      
 
       public function store(Request $request){
+       // dd(auth()->check());
 
           $valide = $request->validate([
             'name'=>'required|string',
@@ -28,6 +30,9 @@ class AdminController extends Controller
           ];
 
           $user = User::create($data);
+          
+         $admin = User::where('role', 'admin')->first();
+$admin->notify(new UserRegisteredNotification($user));
         //  $user->assignRole('admin');
           if($user){
             return back()->with(['success'=>'create successfully']);
@@ -58,7 +63,7 @@ class AdminController extends Controller
     public function dashboard(){
 
      $user = User::get();
-     $user->hasRole('user');
+     //$user->hasRole('user');
 
       return view('dashboard',with(['user'=>$user]));
     }

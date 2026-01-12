@@ -1,5 +1,7 @@
 @extends('layouts/layout')
-@section('title','home page')
+
+@section('title', $path)
+
 @section('content')
 
 @if(Session('message'))
@@ -7,6 +9,8 @@
 {{ Session('message') }}
 
 @endif
+
+
 
 <table>
 <tr>

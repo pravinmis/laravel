@@ -12,21 +12,21 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class MessageSeen implements ShouldBroadcastNow
-{  
-    use Dispatchable, SerializesModels;
-     public $fromId;
+{
+    public $message_id;
+    public $group_id;
+    public $sender_id;
 
-    public function __construct($fromId) {
-        
-        $this->fromId = $fromId;
-       // dd($this->fromId);
+    public function __construct($messageId, $groupId, $senderId)
+    {
+        $this->message_id = $messageId;
+        $this->group_id = $groupId;
+        $this->sender_id = $senderId;
     }
 
     public function broadcastOn()
-    {   
-         \Log::info(['messageseen'=>$this->fromId ]);
-
-        return new PrivateChannel('chat.' . $this->fromId);
+    {
+        return new PresenceChannel('group.' . $this->group_id);
     }
 
     public function broadcastAs()
@@ -34,3 +34,4 @@ class MessageSeen implements ShouldBroadcastNow
         return 'message.seen';
     }
 }
+

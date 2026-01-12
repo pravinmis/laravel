@@ -11,4 +11,7 @@ Artisan::command('inspire', function () {
 
 
 
-Schedule::command('email:daily')->dailyAt('10:00');
+Schedule::command('email:daily')->dailyAt('7:06');
+//Schedule::command('email:daily')->everyMinute();
+
+   // test ke liye

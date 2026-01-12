@@ -11,6 +11,7 @@ use App\Events\UserTyping;
 use App\Events\MessageSent;
 use App\Events\MessageDelivered;
 use App\Events\MessageSeen;
+use App\Models\Group;
 
 
 class NotificationController extends Controller
@@ -34,7 +35,7 @@ public function store(Request $request)
 
     public function send(Request $request)
     {
-       //dd('hello');
+      // dd(auth()->id());
 
          $msg = Message::create([
             'group_id'=>$request->group_id,
@@ -47,32 +48,62 @@ public function store(Request $request)
         return response()->json($message);
     }
 
-    public function delivered($id)
-    {
-        $msg = Message::find($id);
+    
 
-        if ($msg && !$msg->delivered_at) {
-            $msg->update(['delivered_at' => now()]);
-            broadcast(new MessageDelivered($msg->id, $msg->from_id));
-        }
+
+ public function delivered(Request $request)
+{
+    // Validate
+    $request->validate([
+        'group_id'   => 'required',
+        'message_id' => 'required'
+    ]);
+
+    // Update only that message
+    Message::where('id', $request->message_id)
+        ->where('group_id', $request->group_id)
+        ->where('user_id', '!=', auth()->id())
+        ->update([
+            'delivered' => true
+        ]);
+
+    // Broadcast event
+    broadcast(new MessageDelivered(
+        $request->message_id,
+        $request->group_id
+    ))->toOthers();
+
+    return response()->json(['ok' => true]);
+}
+
+
+
+  public function seen(Request $request)
+{
+    $userId = auth()->id();
+    $groupId = $request->group_id;
+
+    // ❗ Only messages NOT sent by me and NOT seen yet
+    $messages = Message::where('group_id', $groupId)
+        ->where('user_id', '!=', $userId)   // not my message
+        ->where('seen',false)              // not seen yet
+        ->get();
+
+    foreach ($messages as $msg) {+
+        $msg->seen = true;
+        $msg->save();
+
+        // 🔥 Notify ONLY SENDER
+        broadcast(new MessageSeen($msg->id, $msg->group_id, $msg->user_id))->toOthers();
     }
 
-    public function seen($userId)
-    {
-       // dd($userId);
-      // \Log::info(['user_id'=> $userId]);
-       
-     $message  =    Message::where('from_id',$userId)
-            ->where('to_id',auth()->id())
-            ->whereNull('seen_at')
-            ->update(['seen_at'=>now()]);
-          
-          //  dd($message);
-        broadcast(new MessageSeen($userId));
-    }
+    return response()->json(['status' => 'ok']);
+}
+
+
 
     public function typing(Request $request)
-    { //dd(auth()->id());
+    { ////dd(auth()->id());
         broadcast(new UserTyping(auth()->id(), $request->group_id))->toOthers();
     }
 
@@ -99,8 +130,28 @@ public function store(Request $request)
         //     })
         //     ->orderBy('id')
         //     ->get();
+         $groups = Group::all();
+        return view('chat',with(['groups'=>$groups]));
+    }
 
-        return view('chat');
+
+
+    public function markRead(Request $request)
+    {
+        $id = $request->notification_id;
+       //  dd($id);
+        $notification = auth()->user()
+            ->unreadNotifications()
+            ->where('id', $id)
+            ->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return response()->json([
+            'status' => 'ok'
+        ]);
     }
 
 }
