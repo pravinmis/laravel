@@ -151,3 +151,13 @@ Route::post('/broadcasting/auth', function () {
 //     auth()->user()->notify(new \App\Notifications\NewUserRegistered(auth()->user()));
 //     return "sent";
 // });
+// Route::any('group',[NotificationController::class,'group']);
+// Route::any('group_create',[Notification::class,'group_create']);
+
+Route::any('/helo',function(){
+   return view('index_2');
+});
+
+
+// routes/web.php
+

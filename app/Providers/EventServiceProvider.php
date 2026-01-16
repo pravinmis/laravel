@@ -13,7 +13,7 @@ class EventServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        //
+        // agr koi event fire hota hia to yha bhi hm code kr skte ha event ka 
     }
 
     /**

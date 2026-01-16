@@ -67,4 +67,20 @@ $admin->notify(new UserRegisteredNotification($user));
 
       return view('dashboard',with(['user'=>$user]));
     }
+
+
+
+
+    public function join($room)
+    {
+        return view('conference', compact('room'));
+    }
+
+public function signal(Request $request){
+
+        broadcast(new WebRTCSignal($request->room, $request->type, $request->data))->toOthers();
+        
+        return response()->json(['status'=>'ok']);
+    }
+
 }

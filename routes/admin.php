@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 Use App\Http\Controllers\AdminController;
 Use App\Http\Controllers\TestController;
-
+use App\Http\Controllers\ConferenceController;
+use App\Events\WebRTCSignal;
 
 Route::prefix('admin')->group(function () {
 
@@ -16,10 +17,36 @@ Route::any('/dashboard',[AdminController::class,'dashboard']);
 
 
 
+Route::get('/conference/{room}',[AdminController::class,'join']);
+
+Route::get('/webrtc/{room}', function($room){
+    return view('room', compact('room'));
+});
+
+// web.php
+Route::post('/webrtc-signal', [AdminController::class, 'signal']);
 
 
 
 
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/conference/{room}', [ConferenceController::class, 'room']);
+    Route::post('/conference/signal', [ConferenceController::class, 'signal']);
+});
+
+
+// Route::post('/webrtc-signal', function(\Illuminate\Http\Request $request){
+
+//     broadcast(new WebRTCSignal(
+//         $request->room,
+//         $request->type,
+//         $request->data
+//     ));
+
+//     return response()->json(['ok' => true]);
+// });
 
 // Route::any('test',[TestController::class, 'test']);
 // Route::any('login',[TestController::class, 'login']);

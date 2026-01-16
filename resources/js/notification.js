@@ -7,7 +7,7 @@ export function initNotifications(userId) {
           //  alert('jhjhjhjh');
             const li = document.createElement('li');
             li.innerHTML = `
-                <a href="#" class="dropdown-item mark-read" data-id="">
+                <a href="#" class="dropdown-item mark-read" data-id="${notification.id}">
                     ${notification.message}
                 </a>
             `;
