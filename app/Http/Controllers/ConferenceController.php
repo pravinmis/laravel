@@ -18,6 +18,7 @@ class ConferenceController extends Controller
 
    public function signal(Request $request)
 {
+  //  dd($request->data);
     broadcast(new SignalEvent(
         $request->room,
         auth()->id(),
