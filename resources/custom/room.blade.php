@@ -3,7 +3,7 @@
 <head>
     <title>Mini Google Meet</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="user-id" content="{{ $user->id }}">
+    <meta name="user-id" content="{{ $user->id }}-{{ uniqid() }}">
 
     @vite(['resources/js/app.js'])
 </head>
