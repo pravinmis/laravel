@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
 // Route::any('counts',[TestController::class, 'count_test']);
 // Route::any('create',[TestController::class, 'create']);
 // Route::any('store',[TestController::class, 'store'])->name('store');
-// Route::any('index_1',[TestController::class, 'index_1']);
+ Route::any('index_1',[TestController::class, 'index_1']);
 // Route::any('edit/{id}',[TestController::class, 'edit'])->name('edit');
 // Route::any('updates/{id}',[TestController::class, 'update'])->name('updates');
 

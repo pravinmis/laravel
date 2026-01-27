@@ -10,6 +10,7 @@ use App\Models\Message;
 use App\Events\UserTyping;
 use App\Events\MessageSent;
 use App\Events\MessageDelivered;
+use App\Events\SingleChatEvent;
 use App\Events\MessageSeen;
 use App\Models\Group;
 
@@ -130,8 +131,10 @@ public function store(Request $request)
         //     })
         //     ->orderBy('id')
         //     ->get();
+          $message = Message::with('user')->get();
+        //  dd($message);
          $groups = Group::all();
-        return view('chat',with(['groups'=>$groups]));
+        return view('chat',with(['groups'=>$groups,'messages'=>$message]));
     }
 
 
@@ -154,4 +157,34 @@ public function store(Request $request)
         ]);
     }
 
+
+    public function chat_loaded(Request $request){
+//dd($request->group_id,$request->user_id);
+
+        $message = Message::with('user')
+    ->where('group_id', $request->group_id)
+    ->get();
+
+        
+      //  dd($message);
+        return response()->json(['message'=>$message]);
+    }
+
+
+
+    public function single_chat($id)
+    {    // dd($id);
+        return view('chat_single',compact('id'));
+    }
+
+    public function single_send(Request $request){
+
+             //  dd($request->toUserId,$request->message,auth()->id());
+        broadcast(new SingleChatEvent(auth()->id(),$request->toUserId,$request->message));
+
+     
+        return response()->json(['successfully']);
+       // dd($request->message);
+
+    }
 }

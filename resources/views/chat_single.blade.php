@@ -5,7 +5,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-id" content="{{ auth()->id() }}">
 
-    @vite('resources/js/app.js')
+    @vite('resources/js/single.js')
 
     <style>
         body{ margin:0; font-family: Arial; background:#f0f2f5; }
@@ -85,18 +85,14 @@
     </style>
 </head>
 <body>
-
+<input type="hidden" id="to_user" value="{{$id}}">
 <div class="chat-app">
 
     <!-- LEFT: GROUP LIST -->
     <div class="sidebar">
         <h3 style="padding:15px;">Groups</h3>
 
-        @foreach($groups as $group)
-            <div class="group" onclick="openGroup({{ $group->id }})">
-                {{ $group->name }}
-            </div>
-        @endforeach
+      
     </div>
 
     <!-- RIGHT: CHAT -->
@@ -106,25 +102,30 @@
         </div>
 
         <div class="messages" id="chat-box">
-            @foreach($messages as $msg)
-        <p><b>{{ $msg->user->name }}</b>: {{ $msg->message }}</p>
-    @endforeach
+           
 </div>
-<div id="online-users" style="padding:10px; background:#fff; border-bottom:1px solid #ddd;">
-    <b>Online Users:</b>
-    <div id="online-list"></div>
-</div>
+
 
         <div class="typing" id="typing"></div>
 
         <div class="chat-input">
-            <input type="text" id="message" placeholder="Type message..." onkeyup="typing()">
-            <button onclick="sendMessage()">Send</button>
+            <input type="text" id="message" placeholder="Type message..." >
+            <button onclick="sendMessages()">Send</button>
         </div>
     </div>
 
 </div>
 
+
+
+
+<script>
+
+
+
+
+
+</script>
 </body>
 </html>
 

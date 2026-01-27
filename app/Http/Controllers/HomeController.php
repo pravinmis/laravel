@@ -98,22 +98,42 @@ class HomeController extends Controller
 //   }
 //       }
 
-//       $user = User::with('posts')->find(1);
+   // $user = User::with('posts')->get();
 
-     //  $post = Post::with('user')->get();
-     //  dd($post);
+    // $post = Post::with('user')->get();
+       
+// dd($user);
+        //   foreach($user as $p){
+        //  echo  $p->name."<br>";
+
+        // //    dd($p->posts);
+        //     foreach($p->posts as $u){
+        //       echo $u->title;
+        //     }
+        //   }
 
 // foreach($user->posts as $u){
 //      echo $u;
 // }
 
-     // die;
+   // die;
 
-      // $user = User::withCount('posts')->get();
-      //dd($user); 
+//        $user = User::withCount('posts')->get();
+//      foreach($user as  $u){
+//       $user->posts  = Post::where('user_id',$u->id)->get();
+//      }
+
+//        foreach($user as $u){
+//     echo $u->name."Br..............//.....";
+
+//     foreach($u->posts as $post){
+//         echo $post->title . "<br>";
+//     }
+// }
+
      //  $user = User::has('posts','>',7)->get();
      // dd($user);
-     //  $user = Post::whereHas('user',fn($q)=>$q->where('name','pravinm'))->get();
+   //  $user = Post::whereHas('user',fn($q)=>$q->where('name','pravinm'))->get();
      //  dd($user);
 
      //   $user = DB::table('posts')

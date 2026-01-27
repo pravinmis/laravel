@@ -14,7 +14,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 // app/Events/MessageSent.php
-class MessageSent implements ShouldBroadcastNow {
+class MessageSent implements ShouldBroadcastNow 
+{
     use Dispatchable, SerializesModels;
 
     public $message;

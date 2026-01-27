@@ -7,10 +7,20 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int)$user->id === (int)$id;
 // });
 
+Broadcast::channel('single-chat.{userId}', function ($user, $userId) {
+    // ✅ Sirf wahi user apna channel join kar sakta hai
+ // dd($user->id,$userId);
+    return (int) $user->id === (int) $userId;
+});
+
+//////////////////////////////////////////////////////////
+//ye notification ka hai code 
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+
 
 Broadcast::channel('group.{groupId}', function ($user, $groupId) {
 

@@ -10,6 +10,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Profile;
 use App\Models\Order;
+use App\Mail\WelcomeMail;
+
 
 class User extends Authenticatable
 {
@@ -21,6 +23,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+ //    protected   $guarded = ['name'];  ye kbhi fill nhi hoga store hoga field db me 
     protected $fillable = [
         'name',
         'email',
@@ -28,7 +31,7 @@ class User extends Authenticatable
         'image'
     ];
 
-     protected $appends = ['image_url']; // important
+     protected $appends = ['image_url']; // important  isko tb use krte hai jb ko new field appnd krna ho tb 
      
 
 
@@ -36,6 +39,13 @@ class User extends Authenticatable
     {
         $this->attributes['email'] = strtoupper($value);
     }
+
+public function getNameAttribute($value)
+{
+    //dd($value);
+    return strtoupper($value);
+}
+
 
 
     
@@ -78,6 +88,25 @@ class User extends Authenticatable
         ];
     }
     
+
+/////// isko model events kahate hai 2 method hote hai ek ye automatic  send krta hai ya iska oberver banakar krte hai bs vo alg file me hota hai 
+ // ✅ MODEL EVENTS
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Before Insert
+        static::creating(function ($user) {
+            $user->created_by = auth()->id() ?? 1;
+        });
+        //  static::created(function ($user) {
+        //    \Mail::to($user->email)->send(new WelcomeMail($user));
+        // });
+        // // Before Update
+        // static::updating(function ($user) {
+        //     $user->updated_by = auth()->id() ?? 1;
+        // });
+    }
 
      
     public function profile(){

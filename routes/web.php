@@ -10,7 +10,23 @@ Use App\Http\Controllers\RazorpayController;
 Use App\Http\Controllers\AdminController;
 Use App\Http\Controllers\NotificationController;
 Use App\Http\Controllers\EmployeeController;
+Use App\Http\Controllers\UserProfileController;
+Use App\Http\Controllers\AudioController;
 use Illuminate\Http\Request;
+
+
+
+
+Route::resource('users', UserProfileController::class);
+Route::get('users-export', [UserProfileController::class, 'exportCsv'])->name('users.export');
+
+
+Route::get('audio-upload', [AudioController::class, 'create']);
+Route::post('audio-upload', [AudioController::class, 'store'])->name('audio.store');
+Route::get('audio-list', [AudioController::class, 'index']);
+
+Route::get('distance', [AudioController::class, 'distance']);
+Route::post('distance', [AudioController::class, 'calculate'])->name('distance.calc');
 
 
 
@@ -135,6 +151,7 @@ Route::any('/chat/send', [NotificationController::class,'send']);
 Route::any('/chat/delivered', [NotificationController::class,'delivered']);
 Route::any('/chat/seen', [NotificationController::class,'seen']);
 Route::any('/chat/typing', [NotificationController::class,'typing']);
+Route::any('/chat/load', [NotificationController::class,'chat_loaded']);
 
 
 Route::post('/notification-read/{id}', function($id){
@@ -161,3 +178,8 @@ Route::any('/helo',function(){
 
 // routes/web.php
 
+///////////////////////
+
+
+Route::any('/single_chat/{id}', [NotificationController::class, 'single_chat']);
+Route::any('/chat/single_send',[NotificationController::class, 'single_send']);

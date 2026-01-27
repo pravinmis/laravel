@@ -16,7 +16,13 @@ Route::any('/',[SellerController::class,'login']);
 
 Route::any('/login',[SellerController::class,'loginstore'])->name('seller.login');
 
+  // Route::any('/gh',function(){
+  //     //$user =   auth()->id();
 
+  //     $user = App\Models\User::where('id', auth()->id())->first();
+  //     dd($user->hasRole('seller'));
+
+  // });
   Route::any('/dashboard',[SellerController::class,'dashboard']);
 
 

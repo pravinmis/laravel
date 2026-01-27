@@ -16,6 +16,9 @@
     @role('user')
      <h1>user Dashboard</h1>
     @endrole
+    @role('seller')
+      <h1>Seller</h1>
+    @endrole
     <span id="notification-count" style="display:none;">0</span>
 
 <ul id="notification-list"></ul>

@@ -1,237 +1,235 @@
 import './bootstrap';
+import { initNotifications } from './notification';
 
-console.log("JS Loaded");
+const userId = document.querySelector('meta[name="user-id"]').content;
+console.log(userId);
+initNotifications(userId);
 
-console.log("ROOM:", window.ROOM_ID);
-console.log("USER:", window.USER_ID);
-console.log("Echo:", window.Echo);
+const csrf   = document.querySelector('meta[name="csrf-token"]').content;
+ const chatBox = document.getElementById('chat-box');
+   
 
-let localStream = null;
-let peers = {};
-let pendingIce = {}; // ICE queue for each peer
+// ===== STATE =====
+let groupId = null;
+let channel = null;
 
-// 🎥 Get Camera + Mic
-navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-.then(stream => {
-    console.log("Camera OK");
+// ===== OPEN GROUP CHAT =====
+window.openGroup = function(id){
 
-    localStream = stream;
-    addVideo(stream, "Me");
+    
 
-    // Start listening to signals
-    listenSignal();
+    // Leave old group
+    if(channel && groupId){
+        Echo.leave(`group.${groupId}`);
+    }
 
-    // Notify others that this user joined
-    sendSignal({ join: true });
+    groupId = id;
 
-})
-.catch(err => {
-    console.error("Camera Error", err);
+   
+
+    // Clear chat box
+    document.getElementById('chat-box').innerHTML = '';
+    /////////////////////////////////////////////////////////////
+
+function renderOnlineUsers(users){
+    const list = document.getElementById('online-list');
+    list.innerHTML = '';
+
+    users.forEach(u => {
+        if(u.id == userId) return; // khud ko mat dikhao
+
+        const div = document.createElement('div');
+        div.innerText = u.name;
+        div.style.cursor = 'pointer';
+        div.style.padding = '5px';
+
+        div.onclick = () => openPrivateChat(u.id, u.name);
+
+        list.appendChild(div);
+    });
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    // Join new group
+    channel = Echo.join(`group.${groupId}`)
+
+        .here(users => {
+            console.log('Online users:', users);
+            renderOnlineUsers(users);
+        })
+
+        .joining(user => {
+            console.log(user.name, 'joined');
+        })
+
+        .leaving(user => {
+            console.log(user.name, 'left');
+        })
+
+        // ===== RECEIVE MESSAGE =====
+        .listen('.group.message', e => {
+            addMessage(e.message);
+
+            // Mark delivered
+            fetch(`/chat/delivered`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf
+                },
+                body: JSON.stringify({
+                    group_id: groupId,
+                    message_id: e.message.id
+                })
+            });
+        })
+
+        // ===== TYPING INDICATOR =====
+        .listen('.typing', e => {
+            const typingDiv = document.getElementById('typing');
+            typingDiv.innerText = `${e.user.name} is typing...`;
+
+            setTimeout(() => {
+                typingDiv.innerText = '';
+            }, 1000);
+        })
+
+        // ===== MESSAGE DELIVERED =====
+        .listen('.message.delivered', e => {
+           // alert('hello');
+            document.querySelectorAll('.tick').forEach(t => {
+                t.innerText = '✔✔';
+            });
+        })
+
+        // ===== MESSAGE SEEN =====
+        .listen('.message.seen', e => {
+    const tick = document.getElementById(`tick-${e.message_id}`);
+    if(tick){
+        tick.innerText = '✔✔ Seen';
+    }
 });
 
 
-// 📡 Listen to Reverb / WebSocket
-function listenSignal(){
-    console.log("listenSignal() called");
-
-    window.Echo.channel('room.' + window.ROOM_ID)
-        .listen('SignalEvent', e => {
-
-            console.log("📩 Signal Received", e);
-
-            // Ignore my own messages
-            if(e.userId == window.USER_ID) return;
-
-            handleSignal(e.userId, e.data);
-        });
-}
 
 
-// 📤 Send signal to server
-function sendSignal(data){
-    console.log("📤 sendSignal()", data);
-
-    fetch('/admin/conference/signal', {
-        method:'POST',
-        headers:{
+      // ===== WHEN OPEN GROUP MARK SEEN =====
+   // ✅ WHEN OPEN GROUP MARK SEEN (ONLY RECEIVER)
+setTimeout(() => {
+    fetch('/chat/seen', {
+        method: 'POST',
+        headers: {
             'Content-Type':'application/json',
-            'X-CSRF-TOKEN': window.CSRF
+            'X-CSRF-TOKEN':csrf
         },
         body: JSON.stringify({
-            room: window.ROOM_ID,
-            data: data
+            group_id: groupId
         })
     });
-}
+}, 300);
 
 
-// 🤝 Create Peer
-function createPeer(userId){
-    console.log("🤝 Create peer for", userId);
 
-    let pc = new RTCPeerConnection({
-        iceServers: [
-            { urls: "stun:stun.l.google.com:19302" }
-        ]
+
+ fetch(`/chat/load`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf
+            },
+            body: JSON.stringify({
+                group_id: groupId,
+                user_id: userId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+              console.log(data);
+            chatBox.innerHTML = ''; // Clear chat box
+            data.message.forEach(msg => {
+
+                
+                const p = document.createElement('p');
+                p.innerHTML = `<b>${msg.user.name}</b>: ${msg.message}`;
+                chatBox.appendChild(p);
+            });
+
+            // Scroll to bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => console.error('Error:', error));
+
+
+};
+
+
+
+
+
+// ===== SEND MESSAGE =====
+window.sendMessage = function(){
+
+    if(!groupId || !message.value.trim()){
+        alert('Select group and type message');
+        return;
+    }
+
+    fetch('/chat/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf
+        },
+        body: JSON.stringify({
+            group_id: groupId,
+            message: message.value
+        })
     });
 
-    // Add my local tracks
-    localStream.getTracks().forEach(track => {
-        pc.addTrack(track, localStream);
+    message.value = '';
+};
+
+
+// ===== TYPING EVENT =====
+window.typing = function(){
+
+    if(!groupId) return;
+
+    fetch('/chat/typing', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf
+        },
+        body: JSON.stringify({
+            group_id: groupId
+        })
     });
+};
 
-    // Remote stream
-    pc.ontrack = e => {
-        console.log("🎥 Remote track received from", userId);
-        addVideo(e.streams[0], "User " + userId);
-    };
 
-    // ICE candidates
-    pc.onicecandidate = e => {
-        if(e.candidate){
-            console.log("❄️ Send ICE");
-            sendSignal({
-                to: userId,
-                ice: e.candidate
-            });
-        }
-    };
+// ===== ADD MESSAGE TO UI =====
+// ===== ADD MESSAGE TO UI =====
+function addMessage(msg){
 
-    peers[userId] = pc;
-    pendingIce[userId] = [];
-    return pc;
+    const div = document.createElement('div');
+
+    // Tick only for sender
+    let tickHtml = '';
+
+    if(msg.user.id == userId){
+        tickHtml = `<span class="tick" id="tick-${msg.id}">✔</span>`;
+    }
+
+    div.innerHTML = `
+        <b>${msg.user.name}:</b> ${msg.message}
+        ${tickHtml}
+    `;
+
+    document.getElementById('chat-box').appendChild(div);
 }
-
-
-// 🔁 Main handle signal logic
-async function handleSignal(fromUser, data){
-
-    console.log("🔁 handleSignal()", fromUser, data);
-
-    let pc = peers[fromUser] || createPeer(fromUser);
-
-    // 1️⃣ New user joined → create offer
-    if(data.join){
-        console.log("👋 User joined, creating offer");
-
-        let offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-
-        sendSignal({
-            to: fromUser,
-            sdp: {
-                type: pc.localDescription.type,
-                sdp: btoa(pc.localDescription.sdp) // 🔥 encode SDP
-            }
-        });
-    }
-
-    // 2️⃣ SDP received
-    if(data.sdp){
-        console.log("📄 SDP received");
-
-        let desc = {
-            type: data.sdp.type,
-            sdp: atob(data.sdp.sdp) // 🔥 decode SDP
-        };
-
-        await pc.setRemoteDescription(new RTCSessionDescription(desc));
-
-        // Apply queued ICE
-        if(pendingIce[fromUser]){
-            for(let ice of pendingIce[fromUser]){
-                await pc.addIceCandidate(ice);
-            }
-            pendingIce[fromUser] = [];
-        }
-
-        // If received SDP is offer → send answer
-        if(data.sdp.type === "offer"){
-            console.log("📞 Sending answer");
-
-            let answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-
-            sendSignal({
-                to: fromUser,
-                sdp: {
-                    type: pc.localDescription.type,
-                    sdp: btoa(pc.localDescription.sdp) // encode
-                }
-            });
-        }
-    }
-
-    // 3️⃣ ICE candidate received
-    if(data.ice){
-        console.log("❄️ ICE received");
-
-        let ice = new RTCIceCandidate(data.ice);
-
-        if(pc.remoteDescription && pc.remoteDescription.type){
-            await pc.addIceCandidate(ice);
-        } else {
-            console.log("🧊 ICE queued");
-            pendingIce[fromUser].push(ice);
-        }
-    }
-}
-
-
-// 📺 Add video to DOM
-function addVideo(stream, label){
-    let video = document.createElement("video");
-    video.srcObject = stream;
-    video.autoplay = true;
-    video.playsInline = true;
-
-    let box = document.createElement("div");
-    box.innerHTML = `<h4>${label}</h4>`;
-    box.appendChild(video);
-
-    document.getElementById("videos").appendChild(box);
-}
-
-
-// 🔇 Optional controls (mute / camera toggle / screen share)
-window.toggleMute = () => {
-    if(!localStream) return;
-    localStream.getAudioTracks().forEach(t => t.enabled = !t.enabled);
-};
-
-window.toggleCamera = () => {
-    if(!localStream) return;
-    localStream.getVideoTracks().forEach(t => t.enabled = !t.enabled);
-};
-
-window.shareScreen = async () => {
-    if(!localStream) return;
-    try {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        const screenTrack = screenStream.getVideoTracks()[0];
-
-        for(let userId in peers){
-            const sender = peers[userId].getSenders().find(s => s.track.kind === 'video');
-            sender.replaceTrack(screenTrack);
-        }
-
-        screenTrack.onended = () => {
-            for(let userId in peers){
-                const sender = peers[userId].getSenders().find(s => s.track.kind === 'video');
-                sender.replaceTrack(localStream.getVideoTracks()[0]);
-            }
-        };
-
-    } catch(err){
-        console.error("Screen Share Error", err);
-    }
-};
-
-window.leaveRoom = () => {
-    for(let userId in peers){
-        peers[userId].close();
-    }
-    peers = {};
-    pendingIce = {};
-    location.href = '/'; // or redirect somewhere
-};

@@ -8,7 +8,7 @@
     @vite(['resources/js/app.js'])
 </head>
 <body>
-
+<h3>reverb</h3>
 <h3>Room: {{ $room }}</h3>
 
 <div id="videos" height="300px" width="300px"></div>

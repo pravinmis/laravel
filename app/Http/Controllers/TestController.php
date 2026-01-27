@@ -160,7 +160,7 @@ $admin->notify(new UserRegisteredNotification($user));
             }
         }
 
-      //  Storage::disk('public')->delete('uploads/'.$user->image);
+      //  Storage::disk('public')->delete($user->image);
         
       //   $filename = time().'/'.$request->new_image->getClientOriginalName();
 

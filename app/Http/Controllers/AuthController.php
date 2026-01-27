@@ -14,15 +14,17 @@ class AuthController extends Controller
 
     public function register(Request $r)
     {
-      // dd('hello');
+      
 
        try{
         
            $file = $r->image;
            //helper
 
-    //     $path =   helpers::uploadImage($file , 'imageManager');
+        $path =   helpers::uploadImage($file , 'imageManager');
+        
 
+       // dd($path );
          // trait
 
     //  $path = $this->uploadImage($file,'imageManager');
@@ -36,6 +38,7 @@ class AuthController extends Controller
             'name' => $r->name,
             'email'=> $r->email,
             'password' => $r->password,
+            'image'=> $path ?? null
             
         ]);
 
@@ -124,8 +127,45 @@ class AuthController extends Controller
 
     public function me(Request $r)
     {
-         $user = Auth('api')->id();
-        // dd($user);
-        return response()->json($r->user());
+         $user =  User::all();
+         //Auth('api')->id(); 
+        // dd($r->user());
+        return response()->json($user);
+    }
+
+    public function  delete(Request $r,$id)
+    {
+         $user = User::find($id)->delete();
+
+        return response()->json(['message'=>'delete successfully']);
+    }
+
+    public function edit($id){
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
+    public function update(Request $request ,$id){
+        
+               if($request->hasFile('image')){
+               
+                $oldImage = $request->oldImage;
+                $file = $request->image;
+
+                // dd($oldImage,$file);
+                $path =  $this->uploadImage($file,'imageManager', $oldImage);
+    }else{
+        $path = $request->oldImage;
+    }
+
+        $data = [
+            'name'=>$request->name,
+            'email'=> $request->email,
+            'image'=>$path ?? null
+        ];
+
+        User::find($id)->update($data);
+return response()->json(['message'=> 'update successfully']);
+
     }
 }

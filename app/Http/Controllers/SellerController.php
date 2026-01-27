@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class SellerController extends Controller
 {
@@ -23,6 +24,8 @@ class SellerController extends Controller
     }
 
      public function dashboard(){
-      return view('dashboard');
+                     $user = User::where('id',auth()->id())->get();
+                    //  dd($user);
+      return view('dashboard',compact('user'));
     }
 }

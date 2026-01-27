@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Providers;
-
+use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
 {
+  //   User::observe(UserObserver::class);
+
+
     // For resources/
     View::addLocation(resource_path());
 

@@ -17,7 +17,7 @@ class AdminController extends Controller
 
       public function store(Request $request){
        // dd(auth()->check());
-
+             dd("nakdkke");
           $valide = $request->validate([
             'name'=>'required|string',
             'email'=>'required|email|unique:users,email',

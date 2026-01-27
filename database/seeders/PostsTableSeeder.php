@@ -15,8 +15,11 @@ class PostsTableSeeder extends Seeder
     public function run(): void
     {
         User::all()->each(function ($user) {
-            Post::factory()->count(rand(1,5))->for($user)->create();
+                 // dd($user);
+            Post::factory()->count(rand(1,4))->for($user)->create();
             // ya: Post::factory()->count(rand(1,5))->create(['user_id' => $user->id]);
         });
+
+    
     }
 }
